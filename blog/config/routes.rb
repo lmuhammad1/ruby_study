@@ -4,7 +4,7 @@ Blog::Application.routes.draw do
     resources :comments
   end
   resources :users
-  resource :session, :only => [:new, :create, :destroy]
+  resource :session
   get '/login' => "sessions#new", :as => "login"
   get '/logout' => "sessions#destroy", :as => "logout"
 end
