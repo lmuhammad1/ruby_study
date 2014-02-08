@@ -9,8 +9,14 @@ class Notifier < ActionMailer::Base
   def email_friend(article, sender_name, receiver_email)
     @article = article
     @sender_name = sender_name
-
+    
+    attachments["image.jpg"] = File.read(Rails.root.join("public/image.jpg"))
     mail :to => receiver_email, :subject => "Interesting Article"
-  end
+  end 
 
+  def comment_added(comment)
+    @article = comment.article
+    mail :to => @article.user.email,
+      :subject => "New comment for '#{@article.title}'"
+  end
 end
