@@ -1,52 +1,73 @@
 require 'test_helper'
 
 class UserStoriesTest < ActionDispatch::IntegrationTest
+	fixtures :all
 
-	test "should login create article and logout" do
-		# Login
-		get login_path
+	test "multiple users creating an article" do
 
-		assert_response :success
-		assert_template 'new'
+		eugene = registered_user
+		lauren = registered_user
 
-		post session_path, :email => 'eugene@example.com', :password => 'secret'
+		eugene.logs_in 'eugene@example.com', 'secret'
+		lauren.logs_in 'lauren@example.com', 'secret'
 
-		assert_response :redirect
-		assert_redirected_to root_path
+		eugene.creates_article :title => 'Integration tests', :body => 'Lorem Ipsum...'
+		lauren.creates_article :title => 'Open Session', :body => 'Lorem Ipsum...'
 
-		follow_redirect!
+		eugene.logs_out
+		lauren.logs_out
+	end
 
-		assert_response :success
-		assert_template 'index'
-		assert session[:user_id]
+	private
+	def registered_user
+		open_session do |user|
+			def user.logs_in(email, password)
+				get login_path
 
-		# Create New Article
+				assert_response :success
+				assert_template 'new'
 
-		get new_article_path
+				post session_path, :email => email, :password => password
 
-		assert_response :success
-		assert_template 'new'
+				assert_response :redirect
+				assert_redirected_to root_path
 
-		post articles_path, :article => { :title => 'Integration Tests', :body => 'Lorem Ipsum..' }
+				follow_redirect!
 
-		assert assigns(:article).valid?
-		assert_response :redirect
-		assert_redirected_to article_path(assigns(:article))
+				assert_response :success
+				assert_template 'index'
+				assert session[:user_id]
+			end
 
-		follow_redirect!
+			def user.logs_out
+				get logout_path
 
-		assert_response :success
-		assert_template 'show'
+				assert_response :redirect
+				assert_redirected_to root_path
+				assert_nil session[:user]
 
-		# Logout
-		get logout_path
+				follow_redirect!
 
-		assert_response :redirect
-		assert_redirected_to root_path
-		assert_nil session[:user]
+				assert_template 'index'
+			end
 
-		follow_redirect!
+			def user.creates_article(article_hash)
+				get new_article_path
 
-		assert_template 'index'
+				assert_response :success
+				assert_template 'new'
+
+				post articles_path, :article => article_hash
+
+				assert assigns(:article).valid?
+				assert_response :redirect
+				assert_redirected_to article_path(assigns(:article))
+
+				follow_redirect!
+
+				assert_response :success
+				assert_template 'show'
+			end
+		end
 	end
 end
