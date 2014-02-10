@@ -1,0 +1,8 @@
+Gherkin - The language and syntax rules of cucumber.
+Common Syntax:
+	Scenario
+		Given
+		When
+		Then
+		And
+		But
