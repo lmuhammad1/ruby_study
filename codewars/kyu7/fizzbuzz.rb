@@ -2,7 +2,7 @@ def fizzbuzz(max)
 	arr = []
 	(1..max).each do |n|
 		if n % 3 == 0 && n % 5 == 0
-			arr << "Fizzbuzz"
+			arr << "FizzBuzz"
 		elsif n % 3 == 0
 			arr << "Fizz"
 		elsif n % 5 == 0
