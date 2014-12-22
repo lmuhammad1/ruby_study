@@ -7,3 +7,4 @@ end
 items = [1,2,3,4]
 
 p items.contains_all?([1,2])
+p items.contains_all?([2,9])

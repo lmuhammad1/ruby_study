@@ -13,3 +13,5 @@ def fizzbuzz(max)
 	end
 	return arr
 end
+
+p fizzbuzz(15)
