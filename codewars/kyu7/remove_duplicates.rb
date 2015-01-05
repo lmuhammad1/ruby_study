@@ -12,10 +12,19 @@ def unique2(integers)
   integers & integers
 end
 
+def unique3(integers)
+  integers.uniq
+end
+
+
 
 p unique([5,2,1,3])
 p unique([5,2,1,3,3,3,2])
 
 p unique2([5,2,1,3])
 p unique2([5,2,1,3,3,3,2])
+
+p unique3([5,2,1,3])
+p unique3([5,2,1,3,3,3,2])
+
 
