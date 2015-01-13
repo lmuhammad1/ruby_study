@@ -1,6 +1,6 @@
 class Array
   def second
-    puts self[1]
+    self[1]
   end
 end
 
